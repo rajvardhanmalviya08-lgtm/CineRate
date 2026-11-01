@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -25,7 +25,6 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // If token expired, clear from local storage
       const currentToken = localStorage.getItem('cinerate_token');
       if (currentToken && !window.location.pathname.includes('/login')) {
         localStorage.removeItem('cinerate_token');
@@ -37,4 +36,3 @@ api.interceptors.response.use(
 );
 
 export default api;
-
